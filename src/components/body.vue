@@ -49,7 +49,7 @@ export default {
     return {
       loading: true,
       mobileheader_toggle_var: false,
-      sidebar_toggle_var: false,
+      sidebar_toggle_local: false,
       horizontal_Sidebar: true,
       resized: false,
       layoutobj: {}
@@ -119,7 +119,7 @@ export default {
   },
   methods: {
     sidebar_toggle(value) {
-      this.sidebar_toggle_var = !value;
+      this.$emit('update:sidebar_toggle_var', !value);
     },
     mobiletoggle_toggle(value) {
       this.mobileheader_toggle_var = value;

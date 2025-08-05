@@ -434,35 +434,61 @@ class PncpApiServiceV2 {
   // 6.3. Serviço Consultar Contratações por Data de Publicação
   async consultarContratacoesPorData(dataInicial, dataFinal, filtros = {}) {
     try {
+      // Verificar se as datas são válidas
+      const dataInicialFormatada = this.formatarDataParaAPI(dataInicial);
+      const dataFinalFormatada = this.formatarDataParaAPI(dataFinal);
+      
+      if (!dataInicialFormatada || !dataFinalFormatada) {
+        throw new Error('Datas inválidas fornecidas');
+      }
+
       const url = `${this.baseUrl}/v1/contratacoes/publicacao`;
       const params = new URLSearchParams({
-        dataInicial: this.formatarDataParaAPI(dataInicial),
-        dataFinal: this.formatarDataParaAPI(dataFinal)
+        dataInicial: dataInicialFormatada,
+        dataFinal: dataFinalFormatada
       });
 
-      // Adicionar filtros opcionais
-      if (filtros.modalidadeId) params.append('modalidadeId', filtros.modalidadeId);
-      if (filtros.modoDisputaId) params.append('modoDisputaId', filtros.modoDisputaId);
-      if (filtros.uf) params.append('uf', filtros.uf);
-      if (filtros.municipioId) params.append('municipioId', filtros.municipioId);
-      if (filtros.cnpj) params.append('cnpj', filtros.cnpj);
-      if (filtros.unidadeAdministrativaId) params.append('unidadeAdministrativaId', filtros.unidadeAdministrativaId);
-      if (filtros.usuarioId) params.append('usuarioId', filtros.usuarioId);
-      if (filtros.pagina) params.append('pagina', filtros.pagina);
-      if (filtros.tamanho) params.append('tamanho', filtros.tamanho);
+      // Adicionar filtros opcionais apenas se não forem vazios
+      if (filtros.modalidadeId && filtros.modalidadeId !== '') params.append('modalidadeId', filtros.modalidadeId);
+      if (filtros.modoDisputaId && filtros.modoDisputaId !== '') params.append('modoDisputaId', filtros.modoDisputaId);
+      if (filtros.uf && filtros.uf !== '') params.append('uf', filtros.uf);
+      if (filtros.municipioId && filtros.municipioId !== '') params.append('municipioId', filtros.municipioId);
+      if (filtros.cnpj && filtros.cnpj !== '') params.append('cnpj', filtros.cnpj);
+      if (filtros.unidadeAdministrativaId && filtros.unidadeAdministrativaId !== '') params.append('unidadeAdministrativaId', filtros.unidadeAdministrativaId);
+      if (filtros.usuarioId && filtros.usuarioId !== '') params.append('usuarioId', filtros.usuarioId);
+      if (filtros.pagina && filtros.pagina > 0) params.append('pagina', filtros.pagina);
+      if (filtros.tamanho && filtros.tamanho > 0) params.append('tamanho', filtros.tamanho);
 
-      console.log('🔍 Consultando contratações por data:', { dataInicial, dataFinal, filtros });
+      console.log('🔍 Consultando contratações por data:', { 
+        dataInicial: dataInicialFormatada, 
+        dataFinal: dataFinalFormatada, 
+        filtros,
+        url: `${url}?${params.toString()}`
+      });
+      
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 segundos timeout
       
       const response = await fetch(`${url}?${params.toString()}`, {
         method: 'GET',
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json'
-        }
+        },
+        signal: controller.signal
       });
 
+      clearTimeout(timeoutId);
+
       if (!response.ok) {
-        throw new Error(`Erro na requisição: ${response.status} - ${response.statusText}`);
+        const errorText = await response.text();
+        console.error('❌ Resposta da API com erro:', {
+          status: response.status,
+          statusText: response.statusText,
+          url: response.url,
+          errorText
+        });
+        throw new Error(`Erro na requisição: ${response.status} - ${response.statusText} - ${errorText}`);
       }
 
       const data = await response.json();
@@ -471,6 +497,13 @@ class PncpApiServiceV2 {
       return data;
     } catch (error) {
       console.error('❌ Erro ao consultar contratações por data:', error);
+      
+      // Se for erro de rede ou timeout, usar dados mock
+      if (error.name === 'AbortError' || error.message.includes('Failed to fetch')) {
+        console.warn('⚠️ API indisponível, usando dados mock');
+        return getMockLicitacoes(filtros);
+      }
+      
       throw error;
     }
   }
@@ -607,6 +640,11 @@ class PncpApiServiceV2 {
   // Métodos auxiliares para obter tabelas de domínio
   getInstrumentosConvocatorios() {
     return INSTRUMENTOS_CONVOCATORIOS;
+  }
+  
+  // Método para acessar dados mock
+  getMockLicitacoes(filtros = {}) {
+    return getMockLicitacoes(filtros);
   }
 
   getModalidadesContratacao() {

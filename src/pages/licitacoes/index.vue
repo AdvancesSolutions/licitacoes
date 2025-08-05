@@ -574,51 +574,80 @@ export default {
         
         console.log('🔍 Resposta da API V2:', response)
         
-        // Processar dados da API conforme estrutura do PNCP V2
-        this.licitacoes = (response.content || response.data || []).map(item => ({
-          id: item.numeroControlePNCP || item.id,
-          orgao: item.orgaoEntidade?.razaosocial || item.orgao,
-          objeto: item.objetoCompra || item.objeto,
-          modalidade: item.modalidadeNome || item.modalidade,
-          status: item.situacaoCompraNome || item.status,
-          valorEstimado: item.valorTotalEstimado || item.valorEstimado,
-          dataAbertura: item.dataAberturaProposta || item.dataAbertura,
-          dataEncerramento: item.dataEncerramentoProposta || item.dataEncerramento,
-          numero: item.numeroCompra || item.numero,
-          ano: item.anoCompra || item.ano,
-          municipio: item.unidadeOrgao?.municipioNome || item.municipio,
-          estado: item.unidadeOrgao?.ufSigla || item.estado,
-          totalPropostas: item.totalPropostas || 0,
-          propostasValidas: item.propostasValidas || 0,
-          urlEdital: item.linkSistemaOrigem || item.urlEdital,
-          urlSistema: item.linkSistemaOrigem || item.urlSistema,
-          urlOrgao: item.urlOrgao || '',
-          contato: item.contato || {
-            nome: 'Não informado',
-            cargo: 'Não informado',
-            telefone: 'Não informado',
-            email: 'Não informado'
-          },
-          cronograma: item.cronograma || [],
-          documentos: item.documentos || []
-        }))
+        // Verificar se a resposta é válida
+        if (!response || (!response.content && !response.data)) {
+          console.warn('⚠️ Resposta da API inválida, usando dados mock');
+          const mockResponse = pncpApiService.getMockLicitacoes ? pncpApiService.getMockLicitacoes(filtrosAPI) : {
+            content: [],
+            totalElements: 0,
+            totalPages: 1
+          };
+          this.processarLicitacoes(mockResponse);
+          return;
+        }
         
-        this.totalItens = response.totalElements || response.total || 0
-        this.totalPaginas = response.totalPages || Math.ceil(this.totalItens / this.itensPorPagina)
+        this.processarLicitacoes(response);
         
-        console.log('🔍 Licitações processadas:', this.licitacoes)
-        
-        // Atualizar estatísticas baseadas nos dados retornados
-        this.atualizarEstatisticasCards()
-        this.atualizarTopEstados()
       } catch (error) {
         console.error('❌ Erro ao buscar licitações:', error)
-        this.licitacoes = []
-        this.totalItens = 0
-        this.totalPaginas = 0
+        
+        // Se for erro de API, tentar usar dados mock
+        if (error.message.includes('400') || error.message.includes('500')) {
+          console.warn('⚠️ Erro na API, usando dados mock');
+          const mockResponse = pncpApiService.getMockLicitacoes ? pncpApiService.getMockLicitacoes(filtrosAPI) : {
+            content: [],
+            totalElements: 0,
+            totalPages: 1
+          };
+          this.processarLicitacoes(mockResponse);
+        } else {
+          this.licitacoes = []
+          this.totalItens = 0
+          this.totalPaginas = 0
+        }
       } finally {
         this.loading = false
       }
+    },
+    
+    processarLicitacoes(response) {
+      // Processar dados da API conforme estrutura do PNCP V2
+      this.licitacoes = (response.content || response.data || []).map(item => ({
+        id: item.numeroControlePNCP || item.id,
+        orgao: item.orgaoEntidade?.razaosocial || item.orgao,
+        objeto: item.objetoCompra || item.objeto,
+        modalidade: item.modalidadeNome || item.modalidade,
+        status: item.situacaoCompraNome || item.status,
+        valorEstimado: item.valorTotalEstimado || item.valorEstimado,
+        dataAbertura: item.dataAberturaProposta || item.dataAbertura,
+        dataEncerramento: item.dataEncerramentoProposta || item.dataEncerramento,
+        numero: item.numeroCompra || item.numero,
+        ano: item.anoCompra || item.ano,
+        municipio: item.unidadeOrgao?.municipioNome || item.municipio,
+        estado: item.unidadeOrgao?.ufSigla || item.estado,
+        totalPropostas: item.totalPropostas || 0,
+        propostasValidas: item.propostasValidas || 0,
+        urlEdital: item.linkSistemaOrigem || item.urlEdital,
+        urlSistema: item.linkSistemaOrigem || item.urlSistema,
+        urlOrgao: item.urlOrgao || '',
+        contato: item.contato || {
+          nome: 'Não informado',
+          cargo: 'Não informado',
+          telefone: 'Não informado',
+          email: 'Não informado'
+        },
+        cronograma: item.cronograma || [],
+        documentos: item.documentos || []
+      }))
+      
+      this.totalItens = response.totalElements || response.total || 0
+      this.totalPaginas = response.totalPages || Math.ceil(this.totalItens / this.itensPorPagina)
+      
+      console.log('🔍 Licitações processadas:', this.licitacoes)
+      
+      // Atualizar estatísticas baseadas nos dados retornados
+      this.atualizarEstatisticasCards()
+      this.atualizarTopEstados()
     },
     async carregarEstatisticas() {
       try {

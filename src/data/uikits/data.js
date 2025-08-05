@@ -182,49 +182,49 @@ export const dataWithIcon = [
         alerttxt: 'You can check in on some of those fields below.',
         alertcolor: 'secondary dark',
         btnclose: 'default',
-        icon: <Heart />
+        icon: 'Heart'
     },
     {
         id: 2,
         alerttxt: 'You can check in on some of those fields below.',
         alertcolor: 'success dark',
         btnclose: 'default',
-        icon: <ThumbsUp />
+        icon: 'ThumbsUp'
     },
     {
         id: 3,
         alerttxt: 'You can check in on some of those fields below.',
         alertcolor: 'info dark',
         btnclose: 'default',
-        icon: <HelpCircle />
+        icon: 'HelpCircle'
     },
     {
         id: 4,
         alerttxt: 'You can check in on some of those fields below.',
         alertcolor: 'warning dark',
         btnclose: 'default',
-        icon: <Bell />
+        icon: 'Bell'
     },
     {
         id: 5,
         alerttxt: 'You can check in on some of those fields below.',
         alertcolor: 'danger dark',
         btnclose: 'default',
-        icon: <ThumbsDown />
+        icon: 'ThumbsDown'
     },
     {
         id: 6,
         alerttxt: 'You can check in on some of those fields below.',
         alertcolor: 'light dark',
         btnclose: 'default',
-        icon: <AlertTriangle />
+        icon: 'AlertTriangle'
     },
     {
         id: 7,
         alerttxt: 'You can check in on some of those fields below.',
         alertcolor: 'dark dark',
         btnclose: 'default',
-        icon: <AlertCircle />
+        icon: 'AlertCircle'
     }
 ];
 
@@ -279,49 +279,49 @@ export const IconsWithOutlineData = [
         alerttxt: 'You can check in on some of those fields below.',
         alertcolor: 'secondary outline',
         btnclose: 'default',
-        icon: <Heart />
+        icon: 'Heart'
     },
     {
         id: 2,
         alerttxt: 'You can check in on some of those fields below.',
         alertcolor: 'success outline',
         btnclose: 'default',
-        icon: <ThumbsUp />
+        icon: 'ThumbsUp'
     },
     {
         id: 3,
         alerttxt: 'You can check in on some of those fields below.',
         alertcolor: 'info outline',
         btnclose: 'default',
-        icon: <HelpCircle />
+        icon: 'HelpCircle'
     },
     {
         id: 4,
         alerttxt: 'You can check in on some of those fields below.',
         alertcolor: 'warning outline',
         btnclose: 'default',
-        icon: <Bell />
+        icon: 'Bell'
     },
     {
         id: 5,
         alerttxt: 'You can check in on some of those fields below.',
         alertcolor: 'danger outline',
         btnclose: 'default',
-        icon: <ThumbsDown />
+        icon: 'ThumbsDown'
     },
     {
         id: 6,
         alerttxt: 'You can check in on some of those fields below.',
         alertcolor: 'light outline',
         btnclose: 'default',
-        icon: <AlertTriangle />
+        icon: 'AlertTriangle'
     },
     {
         id: 7,
         alerttxt: 'You can check in on some of those fields below.',
         alertcolor: 'dark dark',
         btnclose: 'default',
-        icon: <AlertCircle />
+        icon: 'AlertCircle'
     }
 ];
 
@@ -331,14 +331,14 @@ export const IconInverseData = [
         alerttxt: 'You can check in on some of those fields below.',
         alertcolor: 'secondary inverse',
         btnclose: 'default',
-        icon: <i className="icon-heart"></i>
+        icon: 'icon-heart'
     },
     {
         id: 2,
         alerttxt: 'You can check in on some of those fields below.',
         alertcolor: 'success inverse',
         btnclose: 'default',
-        icon: <i className="icon-thumb-up alert-center"></i>,
+        icon: 'icon-thumb-up alert-center',
         boldtxt: 'Well Done!'
     },
     {
@@ -346,7 +346,7 @@ export const IconInverseData = [
         alerttxt: 'You can check in on some of those fields below.',
         alertcolor: 'info inverse',
         btnclose: 'default',
-        icon: <i className="icon-help-alt"></i>,
+        icon: 'icon-help-alt',
         boldtxt: 'Welcome!'
     },
     {
@@ -354,7 +354,7 @@ export const IconInverseData = [
         alerttxt: 'You can check in on some of those fields below.',
         alertcolor: 'warning inverse',
         btnclose: 'default',
-        icon: <i className="icon-bell"></i>,
+        icon: 'icon-bell',
         boldtxt: 'Congratulation!'
 
     },
@@ -363,7 +363,7 @@ export const IconInverseData = [
         alerttxt: 'You can check in on some of those fields below.',
         alertcolor: 'danger inverse',
         btnclose: 'default',
-        icon: <i className="icon-thumb-down"></i>,
+        icon: 'icon-thumb-down',
         txt: 'Your',
         boldtxt: 'Perfomance'
     },
@@ -372,14 +372,14 @@ export const IconInverseData = [
         alerttxt: 'You can check in on some of those fields below.',
         alertcolor: 'light outline inverse',
         btnclose: 'default',
-        icon: <i className="icon-alert txt-dark"></i>
+        icon: 'icon-alert txt-dark'
     },
     {
         id: 7,
         alerttxt: 'You can check in on some of those fields below.',
         alertcolor: 'dark inverse',
         btnclose: 'default',
-        icon: <i className="icon-info-alt"></i>
+        icon: 'icon-info-alt'
     }
 ];
 
@@ -389,7 +389,7 @@ export const TextAsActionsData = [
         alertcolor: 'secondary  inverse alert-dismissible',
         alerttxt: 'Oh snap! Change a few things up and submit again.',
         btnClose: 'close',
-        icon: <i className="icon-heart"></i>,
+        icon: 'icon-heart',
         divCls: 'bg-secondary',
         btnContent: '<span className="bg-secondary" >dismiss</span>'
     },
@@ -398,7 +398,7 @@ export const TextAsActionsData = [
         alertcolor: 'success inverse alert-dismissible',
         alerttxt: 'Your time Over after <b> 5 </b> miniute',
         btnClose: 'close',
-        icon: <i className="icon-thumb-up alert-center"></i>,
+        icon: 'icon-thumb-up alert-center',
         divCls: 'bg-success',
         btnContent: '<span className="bg-success">dismiss</span>'
     },
@@ -407,7 +407,7 @@ export const TextAsActionsData = [
         alertcolor: 'info inverse alert-dismissible',
         alerttxt: '<b>Welcome!</b> Start your day with some alerts.',
         btnClose: 'close',
-        icon: <i className="icon-help-alt"></i>,
+        icon: 'icon-help-alt',
         divCls: 'bg-info',
         btnContent: '<span className="bg-primary ">dismiss</span>'
     },
@@ -416,7 +416,7 @@ export const TextAsActionsData = [
         alertcolor: 'warning inverse alert-dismissible',
         alerttxt: '<b> Congratulation!</b>Your Product Added in Like List',
         btnClose: 'close',
-        icon: <i className="icon-bell"></i>,
+        icon: 'icon-bell',
         divCls: 'bg-warning',
         btnContent: '<span className="bg-warning ">dismiss</span>'
     },
@@ -424,7 +424,7 @@ export const TextAsActionsData = [
         id: 5,
         alertcolor: 'danger inverse alert-dismissible',
         alerttxt: 'Your <b> Perfomance </b> is down on this week',
-        icon: <i className="icon-timer"></i>,
+        icon: 'icon-timer',
         divCls: 'bg-danger',
         btnContent: '<span className="bg-danger ">dismiss</span>'
     },
@@ -432,7 +432,7 @@ export const TextAsActionsData = [
         id: 6,
         alertcolor: 'light inverse alert-dismissible',
         alerttxt: 'You can check in on some of those fields below.',
-        icon: <i className="icon-alert txt-dark"></i>,
+        icon: 'icon-alert txt-dark',
         divCls: 'bg-light',
         btnContent: '<span className="bg-light txt-dark">dismiss</span>'
     },
@@ -440,7 +440,7 @@ export const TextAsActionsData = [
         id: 7,
         alertcolor: 'dark inverse alert-dismissible',
         alerttxt: 'You can check in on some of those fields below.',
-        icon: <i className="icon-info-alt"></i>,
+        icon: 'icon-info-alt',
         divCls: 'bg-dark',
         btnContent: '<span className="bg-dark txt-dark ">dismiss</span>'
     }
