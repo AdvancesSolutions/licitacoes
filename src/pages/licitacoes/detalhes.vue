@@ -250,7 +250,7 @@
 </template>
 
 <script>
-import pncpApiService from '@/services/pncpApi.js'
+import pncpApiService from '@/services/pncpApiV2.js'
 
 export default {
   name: 'LicitacaoDetalhes',

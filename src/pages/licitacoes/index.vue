@@ -321,7 +321,7 @@
 </template>
 
 <script>
-import pncpApiService from '@/services/pncpApi.js'
+import pncpApiService from '@/services/pncpApiV2.js'
 import DropDown1 from '@/pages/dashboard/base/dropdown/DropDown1.vue'
 import VueApexCharts from 'vue3-apexcharts'
 
@@ -547,7 +547,7 @@ export default {
     async buscarLicitacoes() {
       this.loading = true
       try {
-        // Preparar filtros para a API do PNCP
+        // Preparar filtros para a API do PNCP V2
         const filtrosAPI = { ...this.filtros }
         
         // Se não há datas especificadas, usar o mês atual
@@ -559,12 +559,23 @@ export default {
         }
         
         console.log('🔍 Buscando licitações com filtros:', filtrosAPI)
-        const response = await pncpApiService.buscarLicitacoes(filtrosAPI, this.paginaAtual, this.itensPorPagina)
         
-        console.log('🔍 Resposta da API:', response)
+        // Usar a nova API V2 conforme manual PNCP
+        const response = await pncpApiService.consultarContratacoesPorData(
+          filtrosAPI.dataInicio,
+          filtrosAPI.dataFim,
+          {
+            modalidadeId: filtrosAPI.modalidade,
+            uf: filtrosAPI.estado,
+            pagina: this.paginaAtual,
+            tamanho: this.itensPorPagina
+          }
+        )
         
-        // Processar dados da API conforme estrutura do PNCP
-        this.licitacoes = (response.data || []).map(item => ({
+        console.log('🔍 Resposta da API V2:', response)
+        
+        // Processar dados da API conforme estrutura do PNCP V2
+        this.licitacoes = (response.content || response.data || []).map(item => ({
           id: item.numeroControlePNCP || item.id,
           orgao: item.orgaoEntidade?.razaosocial || item.orgao,
           objeto: item.objetoCompra || item.objeto,
@@ -592,7 +603,7 @@ export default {
           documentos: item.documentos || []
         }))
         
-        this.totalItens = response.total || 0
+        this.totalItens = response.totalElements || response.total || 0
         this.totalPaginas = response.totalPages || Math.ceil(this.totalItens / this.itensPorPagina)
         
         console.log('🔍 Licitações processadas:', this.licitacoes)
@@ -611,8 +622,29 @@ export default {
     },
     async carregarEstatisticas() {
       try {
-        const response = await pncpApiService.getEstatisticas()
-        this.estatisticas = response || {}
+        // Usar a nova API V2 para buscar estatísticas
+        const hoje = new Date()
+        const primeiroDiaMes = new Date(hoje.getFullYear(), hoje.getMonth(), 1)
+        
+        // Buscar contratações do mês atual para calcular estatísticas
+        const response = await pncpApiService.consultarContratacoesPorData(
+          primeiroDiaMes.toISOString().split('T')[0],
+          hoje.toISOString().split('T')[0],
+          { tamanho: 1000 } // Buscar mais itens para estatísticas
+        )
+        
+        // Calcular estatísticas baseadas nos dados retornados
+        const licitacoes = response.content || response.data || []
+        const estatisticas = {
+          total: licitacoes.length,
+          abertas: licitacoes.filter(l => l.situacaoCompraNome === 'Divulgada no PNCP').length,
+          emAndamento: licitacoes.filter(l => l.situacaoCompraNome === 'Em Andamento').length,
+          homologadas: licitacoes.filter(l => l.situacaoCompraNome === 'Homologada').length,
+          encerradas: licitacoes.filter(l => l.situacaoCompraNome === 'Encerrada').length,
+          valorTotal: licitacoes.reduce((total, l) => total + (l.valorTotalEstimado || 0), 0)
+        }
+        
+        this.estatisticas = estatisticas
         this.atualizarEstatisticasCards()
       } catch (error) {
         console.error('Erro ao carregar estatísticas:', error)

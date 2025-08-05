@@ -412,6 +412,14 @@ const routes = [
             meta: {
               title: 'Detalhes da Licitação | Sistema de Licitações',
             }
+          },
+          {
+            path: 'teste-api',
+            name: 'testeApiPNCP',
+            component: () => import('../pages/licitacoes/teste-api.vue'),
+            meta: {
+              title: 'Teste da API PNCP | Sistema de Licitações',
+            }
           }
         ]
       },
