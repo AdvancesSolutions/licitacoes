@@ -586,6 +586,234 @@ class PncpApiServiceV2 {
       return false;
     }
   }
+
+  // Buscar licitações com filtros (compatibilidade com código existente)
+  async buscarLicitacoes(filtros = {}, pagina = 1, itensPorPagina = 50) {
+    try {
+      console.log('🔍 Buscando licitações com filtros:', filtros);
+      
+      // Preparar datas
+      let dataInicial = null;
+      let dataFinal = null;
+      
+      if (filtros.dataInicio) {
+        dataInicial = this.formatarDataParaAPI(filtros.dataInicio);
+      }
+      if (filtros.dataFim) {
+        dataFinal = this.formatarDataParaAPI(filtros.dataFim);
+      }
+      
+      // Se não há datas, usar mês atual
+      if (!dataInicial && !dataFinal) {
+        const hoje = new Date();
+        const primeiroDiaMes = new Date(hoje.getFullYear(), hoje.getMonth(), 1);
+        dataInicial = this.formatarDataParaAPI(primeiroDiaMes);
+        dataFinal = this.formatarDataParaAPI(hoje);
+      }
+      
+      // Preparar filtros para a API V2
+      const filtrosAPI = {
+        modalidadeId: filtros.modalidade,
+        uf: filtros.estado,
+        municipioId: filtros.municipio,
+        cnpj: filtros.cnpj,
+        unidadeAdministrativaId: filtros.codigoUnidadeAdministrativa,
+        usuarioId: filtros.idUsuario,
+        pagina: pagina,
+        tamanho: itensPorPagina
+      };
+      
+      const response = await this.consultarContratacoesPorData(dataInicial, dataFinal, filtrosAPI);
+      
+      return {
+        data: response.content || response.data || [],
+        total: response.totalElements || response.total || 0,
+        totalPages: response.totalPages || Math.ceil((response.totalElements || 0) / itensPorPagina),
+        currentPage: pagina - 1,
+        empty: (response.content || []).length === 0
+      };
+      
+    } catch (error) {
+      console.error('❌ Erro ao buscar licitações:', error);
+      throw error;
+    }
+  }
+
+  // Buscar licitações em aberto (compatibilidade com código existente)
+  async buscarLicitacoesEmAberto(filtros = {}, pagina = 1, itensPorPagina = 50) {
+    try {
+      console.log('🔍 Buscando licitações em aberto com filtros:', filtros);
+      
+      let dataFinal = null;
+      if (filtros.dataFim) {
+        dataFinal = this.formatarDataParaAPI(filtros.dataFim);
+      } else {
+        dataFinal = this.formatarDataParaAPI(new Date());
+      }
+      
+      const filtrosAPI = {
+        modalidadeId: filtros.modalidade,
+        uf: filtros.estado,
+        municipioId: filtros.municipio,
+        cnpj: filtros.cnpj,
+        unidadeAdministrativaId: filtros.codigoUnidadeAdministrativa,
+        usuarioId: filtros.idUsuario,
+        pagina: pagina,
+        tamanho: itensPorPagina
+      };
+      
+      const response = await this.consultarContratacoesEmAberto(dataFinal, filtrosAPI);
+      
+      return {
+        data: response.content || response.data || [],
+        total: response.totalElements || response.total || 0,
+        totalPages: response.totalPages || Math.ceil((response.totalElements || 0) / itensPorPagina),
+        currentPage: pagina - 1,
+        empty: (response.content || []).length === 0
+      };
+      
+    } catch (error) {
+      console.error('❌ Erro ao buscar licitações em aberto:', error);
+      throw error;
+    }
+  }
+
+  // Buscar licitações de teste (compatibilidade com código existente)
+  async buscarLicitacoesTeste() {
+    try {
+      console.log('🧪 Buscando licitações de teste...');
+      
+      const hoje = this.formatarDataParaAPI(new Date());
+      const response = await this.consultarContratacoesPorData(hoje, hoje, {
+        pagina: 1,
+        tamanho: 5
+      });
+      
+      return response;
+    } catch (error) {
+      console.error('❌ Erro ao buscar licitações de teste:', error);
+      return null;
+    }
+  }
+
+  // Testar filtros de data (compatibilidade com código existente)
+  async testarFiltrosData() {
+    try {
+      const hoje = new Date().toISOString().split('T')[0];
+      console.log('🧪 Testando filtros de data:', hoje);
+      
+      const filtros = {
+        dataInicio: hoje,
+        dataFim: hoje
+      };
+      
+      const response = await this.buscarLicitacoes(filtros, 1, 10);
+      
+      return {
+        api: response,
+        dataTestada: hoje
+      };
+    } catch (error) {
+      console.error('❌ Erro ao testar filtros de data:', error);
+      return null;
+    }
+  }
+
+  // Obter detalhes de licitação (compatibilidade com código existente)
+  async getLicitacaoDetalhes(idLicitacao) {
+    try {
+      console.log('🔍 Buscando detalhes da licitação:', idLicitacao);
+      
+      // Para compatibilidade, retornar dados básicos
+      // Em uma implementação real, você teria um endpoint específico para detalhes
+      const hoje = this.formatarDataParaAPI(new Date());
+      const response = await this.consultarContratacoesPorData(hoje, hoje, {
+        pagina: 1,
+        tamanho: 100
+      });
+      
+      const licitacao = (response.content || []).find(l => 
+        l.numeroControlePNCP === idLicitacao || l.id === idLicitacao
+      );
+      
+      return licitacao || null;
+    } catch (error) {
+      console.error('❌ Erro ao buscar detalhes da licitação:', error);
+      return null;
+    }
+  }
+
+  // Buscar licitações recentes (compatibilidade com código existente)
+  async getLicitacoesRecentes(page = 1, size = 50) {
+    try {
+      console.log('🔍 Buscando licitações recentes...');
+      
+      const hoje = this.formatarDataParaAPI(new Date());
+      const umaSemanaAtras = this.formatarDataParaAPI(new Date(Date.now() - 7 * 24 * 60 * 60 * 1000));
+      
+      const response = await this.consultarContratacoesPorData(umaSemanaAtras, hoje, {
+        pagina: page,
+        tamanho: size
+      });
+      
+      return response;
+    } catch (error) {
+      console.error('❌ Erro ao buscar licitações recentes:', error);
+      return null;
+    }
+  }
+
+  // Testar diferentes endpoints da API conforme endpoint funcional
+  async testarEndpoints() {
+    const endpoints = [
+      `${this.baseUrl}/v1/pca/itens`,
+      `${this.baseUrl}/v1/contratacoes/publicacao`,
+      `${this.baseUrl}/v1/contratacoes/abertas`,
+      `${this.baseUrl}/v1/atas/registro-preco`,
+      `${this.baseUrl}/v1/contratos/publicacao`
+    ];
+    
+    console.log('🧪 Testando diferentes endpoints da API PNCP V2...');
+    
+    for (const endpoint of endpoints) {
+      try {
+        console.log(`🧪 Testando: ${endpoint}`);
+        const hoje = this.formatarDataParaAPI(new Date());
+        
+        // Construir URL de teste baseada no endpoint
+        let testUrl = '';
+        if (endpoint.includes('/pca/')) {
+          testUrl = `${endpoint}?ano=2024&pagina=1&tamanho=1`;
+        } else if (endpoint.includes('/abertas')) {
+          testUrl = `${endpoint}?dataFinal=${hoje}&pagina=1&tamanho=1`;
+        } else {
+          testUrl = `${endpoint}?dataInicial=${hoje}&dataFinal=${hoje}&pagina=1&tamanho=1`;
+        }
+        
+        const response = await fetch(testUrl, {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          }
+        });
+        
+        console.log(`🧪 Status: ${response.status}`);
+        
+        if (response.ok) {
+          const data = await response.json();
+          console.log(`🧪 ✅ Endpoint funcionando: ${endpoint}`);
+          console.log('🧪 Dados:', data);
+          return endpoint;
+        }
+      } catch (error) {
+        console.log(`🧪 ❌ Endpoint falhou: ${endpoint} - ${error.message}`);
+      }
+    }
+    
+    console.log('🧪 ❌ Nenhum endpoint funcionou');
+    return null;
+  }
 }
 
 // Instância singleton do serviço
