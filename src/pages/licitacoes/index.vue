@@ -546,18 +546,19 @@ export default {
   methods: {
     async buscarLicitacoes() {
       this.loading = true
+      
+      // Preparar filtros para a API do PNCP V2
+      const filtrosAPI = { ...this.filtros }
+      
+      // Se não há datas especificadas, usar o mês atual
+      if (!filtrosAPI.dataInicio && !filtrosAPI.dataFim) {
+        const hoje = new Date()
+        const primeiroDiaMes = new Date(hoje.getFullYear(), hoje.getMonth(), 1)
+        filtrosAPI.dataInicio = primeiroDiaMes.toISOString().split('T')[0]
+        filtrosAPI.dataFim = hoje.toISOString().split('T')[0]
+      }
+      
       try {
-        // Preparar filtros para a API do PNCP V2
-        const filtrosAPI = { ...this.filtros }
-        
-        // Se não há datas especificadas, usar o mês atual
-        if (!filtrosAPI.dataInicio && !filtrosAPI.dataFim) {
-          const hoje = new Date()
-          const primeiroDiaMes = new Date(hoje.getFullYear(), hoje.getMonth(), 1)
-          filtrosAPI.dataInicio = primeiroDiaMes.toISOString().split('T')[0]
-          filtrosAPI.dataFim = hoje.toISOString().split('T')[0]
-        }
-        
         console.log('🔍 Buscando licitações com filtros:', filtrosAPI)
         
         // Usar a nova API V2 conforme manual PNCP
