@@ -15,11 +15,8 @@
     </div>
     <div class="logo-icon-wrapper">
       <router-link to="/">
-        <img
-          class="img-fluid"
-          src="../../assets/images/logo/logo-icon.png"
-          alt=""
-      /></router-link>
+        <span class="logo-text-small">advances</span>
+      </router-link>
     </div>
     <Nav />
   </div>
@@ -49,3 +46,18 @@
     },
   };
 </script>
+
+<style scoped>
+.logo-text-small {
+  font-size: 16px;
+  font-weight: 700;
+  color: #7366ff;
+  text-decoration: none;
+  letter-spacing: 1px;
+}
+
+.logo-text-small:hover {
+  color: #5a4fcf;
+  text-decoration: none;
+}
+</style>

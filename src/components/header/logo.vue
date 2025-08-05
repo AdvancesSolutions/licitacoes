@@ -2,7 +2,7 @@
   <div class="header-logo-wrapper col-auto p-0">
     <div class="logo-wrapper">
       <router-link to="/">
-        <img class="img-fluid" src="../../assets/images/logo/logo.png" alt />
+        <span class="logo-text">advances</span>
       </router-link>
     </div>
     <div class="toggle-sidebar" @click="toggle_sidebar">
@@ -26,3 +26,18 @@
     },
   };
 </script>
+
+<style scoped>
+.logo-text {
+  font-size: 24px;
+  font-weight: 700;
+  color: #7366ff;
+  text-decoration: none;
+  letter-spacing: 1px;
+}
+
+.logo-text:hover {
+  color: #5a4fcf;
+  text-decoration: none;
+}
+</style>

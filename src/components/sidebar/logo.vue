@@ -1,14 +1,6 @@
 <template>
   <router-link to="/">
-    <img
-      class="img-fluid for-light"
-      src="../../assets/images/logo/logo.png"
-      alt=""
-    /><img
-      class="img-fluid for-dark"
-      src="../../assets/images/logo/logo_dark.png"
-      alt=""
-    />
+    <span class="logo-text">advances</span>
   </router-link>
 </template>
 <script>
@@ -17,3 +9,18 @@
     name: 'Logo',
   };
 </script>
+
+<style scoped>
+.logo-text {
+  font-size: 20px;
+  font-weight: 700;
+  color: #7366ff;
+  text-decoration: none;
+  letter-spacing: 1px;
+}
+
+.logo-text:hover {
+  color: #5a4fcf;
+  text-decoration: none;
+}
+</style>

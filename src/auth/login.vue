@@ -8,8 +8,7 @@
             <div>
               <div>
                 <a class="logo">
-                  <img class="img-fluid for-light" src="../assets/images/logo/logo.png" alt="looginpage" />
-                  <img class="img-fluid for-dark" src="../assets/images/logo/logo_dark.png" alt="looginpage" />
+                  <span class="logo-text-auth">advances</span>
                 </a>
               </div>
               <div class="login-main">
@@ -131,3 +130,18 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.logo-text-auth {
+  font-size: 28px;
+  font-weight: 700;
+  color: #7366ff;
+  text-decoration: none;
+  letter-spacing: 1px;
+}
+
+.logo-text-auth:hover {
+  color: #5a4fcf;
+  text-decoration: none;
+}
+</style>
