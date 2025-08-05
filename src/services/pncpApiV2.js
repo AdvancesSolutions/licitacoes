@@ -449,7 +449,10 @@ class PncpApiServiceV2 {
       });
 
       // Adicionar filtros opcionais apenas se não forem vazios
-      if (filtros.modalidadeId && filtros.modalidadeId !== '') params.append('modalidadeId', filtros.modalidadeId);
+      // O API requer codigoModalidadeContratacao sempre presente, usar 0 se não especificado
+      const codigoModalidade = filtros.modalidadeId && filtros.modalidadeId !== '' ? filtros.modalidadeId : '0';
+      params.append('codigoModalidadeContratacao', codigoModalidade);
+      
       if (filtros.modoDisputaId && filtros.modoDisputaId !== '') params.append('modoDisputaId', filtros.modoDisputaId);
       if (filtros.uf && filtros.uf !== '') params.append('uf', filtros.uf);
       if (filtros.municipioId && filtros.municipioId !== '') params.append('municipioId', filtros.municipioId);
@@ -517,7 +520,10 @@ class PncpApiServiceV2 {
       });
 
       // Adicionar filtros opcionais
-      if (filtros.modalidadeId) params.append('modalidadeId', filtros.modalidadeId);
+      // O API requer codigoModalidadeContratacao sempre presente, usar 0 se não especificado
+      const codigoModalidade = filtros.modalidadeId && filtros.modalidadeId !== '' ? filtros.modalidadeId : '0';
+      params.append('codigoModalidadeContratacao', codigoModalidade);
+      
       if (filtros.uf) params.append('uf', filtros.uf);
       if (filtros.municipioId) params.append('municipioId', filtros.municipioId);
       if (filtros.cnpj) params.append('cnpj', filtros.cnpj);
@@ -560,7 +566,10 @@ class PncpApiServiceV2 {
       });
 
       // Adicionar filtros opcionais
-      if (filtros.modalidadeId) params.append('modalidadeId', filtros.modalidadeId);
+      // O API requer codigoModalidadeContratacao sempre presente, usar 0 se não especificado
+      const codigoModalidade = filtros.modalidadeId && filtros.modalidadeId !== '' ? filtros.modalidadeId : '0';
+      params.append('codigoModalidadeContratacao', codigoModalidade);
+      
       if (filtros.uf) params.append('uf', filtros.uf);
       if (filtros.municipioId) params.append('municipioId', filtros.municipioId);
       if (filtros.cnpj) params.append('cnpj', filtros.cnpj);
@@ -603,7 +612,10 @@ class PncpApiServiceV2 {
       });
 
       // Adicionar filtros opcionais
-      if (filtros.modalidadeId) params.append('modalidadeId', filtros.modalidadeId);
+      // O API requer codigoModalidadeContratacao sempre presente, usar 0 se não especificado
+      const codigoModalidade = filtros.modalidadeId && filtros.modalidadeId !== '' ? filtros.modalidadeId : '0';
+      params.append('codigoModalidadeContratacao', codigoModalidade);
+      
       if (filtros.tipoContratoId) params.append('tipoContratoId', filtros.tipoContratoId);
       if (filtros.uf) params.append('uf', filtros.uf);
       if (filtros.municipioId) params.append('municipioId', filtros.municipioId);
